@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import logging
+from datetime import datetime
 from .models import Pump, Status
 from bs4 import BeautifulSoup
 import requests
@@ -18,10 +19,14 @@ def update_statuses():
             alarm = parser.find("font", color="#FB2222")
         except AttributeError:
             logging.exception("Failed to retrieve status of pump #%d, %s" % (id, pump.name))
+            date = datetime.now().isoformat()
+            with open(date + ".err",'w') as errorlog:
+                errorlog.write(content)
+                logging.info("Response content available in %s.err for debugging." % date)
             continue
         if alarm is not None:
             status = alarm.text.split("=>")[1].strip()
-            logging.info("Alarm conditon: %s" % status)
+            logging.info("Alarm condition: %s" % status)
             update_status(pump, status)
         else:
             logging.info("No alarm condition")

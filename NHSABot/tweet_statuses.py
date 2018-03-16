@@ -30,7 +30,7 @@ def tweet_statuses():
                 logging.info("No alarm - no prior records for this pump.")
         else:
             # There is an alarm status.
-            message = "The pump at %s has started to report %s.\n\nThis status was first observed at %s." % (status.pump.name, status.status,status.timestamp.strftime("%H:%M:%S on %B %d, %Y"))
+            message = "The pump at %s has started to report %s.\n\nThis status was first observed at %s." % (status.pump.name, status.status,status.timestamp.strftime("%H:%M on %B %d, %Y"))
             logging.info("Tweeting: %s" % message)
             api.update_status(message)
             
@@ -44,8 +44,8 @@ def format_timedelta(duration):
     seconds = (seconds % 60)
     p = inflect.engine()
     string = ""
-    string = string + "%d %s," % (days, p.plural("day", days)) if days != 0 else ""
-    string = string + "%d %s," % (hours, p.plural("hour", hours)) if hours != 0 else ""
+    string = string + "%d %s, " % (days, p.plural("day", days)) if days != 0 else ""
+    string = string + "%d %s, " % (hours, p.plural("hour", hours)) if hours != 0 else ""
     string = string + "%d %s" % (minutes, p.plural("minute", minutes)) if minutes != 0 else ""
     return string
 
