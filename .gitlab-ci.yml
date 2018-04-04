@@ -16,7 +16,7 @@ test:
 deploy:
   stage: deploy
   before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - 'apt-get update -y && apt-get install openssh-client rsync'
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
@@ -24,7 +24,7 @@ deploy:
   script:
   - echo "Initiating deployment..."
   - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "[ -d ~/NHSABot ] && rm -r ~/NHSABot" 
-  - scp -P $SSH_PORT -r ../NHSABot $SSH_USER@$SSH_HOST:~/
+  - rsync -p --chmod=0700 -e "ssh -p $SSH_PORT" -rz ../NHSABot $SSH_USER@$SSH_HOST:~/
   environment:
     name: production
   only:
