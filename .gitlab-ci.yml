@@ -5,6 +5,7 @@ before_script:
 
 stages:
   - test
+  - deploy
   
 test:
   stage: test
@@ -12,3 +13,19 @@ test:
   - pip install pylint
   - pylint -d C,R *.py
 
+deploy:
+  stage: deploy
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo "$SSH_SERVER_HOSTKEYS" > ~/.ssh/known_hosts'
+  script:
+  - echo "Initiating deployment..."
+  - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "[ -d ~/NHSABot ] && rm -r ~/NHSABot" 
+  - scp -P $SSH_PORT -r ../NHSABot $SSH_USER@$SSH_HOST:~/
+  environment:
+    name: production
+  only:
+  - master
