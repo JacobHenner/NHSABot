@@ -45,8 +45,11 @@ def tweet_pump_statuses():
 def tweet_noaa_statuses():
     for status in NOAA_status.select().where(NOAA_status.processed == False):
         message = "%s.\n\n@NWS: \"%s\"" % (status.status, status.summary)
-        logging.info("Tweeting: %s" % message)
-        twitter_api.update_status(message)
+        if status.severity != "Minor" and status.severity != "Unknown":
+            logging.info("Tweeting: %s" % message)
+            twitter_api.update_status(message)
+        else:
+            logging.info("Not tweeting due to insufficient severity: %s" % message)
         status.processed = True
         status.save()
 
