@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import logging
 from datetime import datetime
-from .models import Pump, Status
+from .models import Pump, Pump_status
 from bs4 import BeautifulSoup
 import requests
 
@@ -9,7 +9,7 @@ session = requests.session()
 session.get("https://www.123mc.com/123mc/login.asp?Mobi=N&f=y&1=aufn&87=aufn11776&4=yJKKhQt3WHSpb7AM6hmg1Q%3D%3D")
 session.get("https://www.123mc.com/123mc/map2009.4.asp?pbl=27731")
 
-def update_statuses():
+def update_pump_statuses():
     for pump in Pump.select():
         id = pump.id
         logging.info("Retrieving status of pump #%d, %s" % (id, pump.name))
@@ -27,16 +27,16 @@ def update_statuses():
         if alarm is not None:
             status = alarm.text.split("=>")[1].strip()
             logging.info("Alarm condition: %s" % status)
-            update_status(pump, status)
+            update_pump_status(pump, status)
         else:
             logging.info("No alarm condition")
-            update_status(pump, "No alarm")
+            update_pump_status(pump, "No alarm")
 
-def update_status(pump, status):
-    last_status = Status.select().where(Status.pump == pump).order_by(Status.id.desc())
+def update_pump_status(pump, status):
+    last_status = Pump_status.select().where(Pump_status.pump == pump).order_by(Pump_status.id.desc())
     if not last_status.exists() or last_status.get().status != status:
         logging.info("Pump status differs from last entry, updating database")
-        Status(pump=pump, status=status).save()
+        Pump_status(pump=pump, status=status).save()
 
 if __name__ == "__main__":
-    update_statuses()
+    update_pump_statuses()
