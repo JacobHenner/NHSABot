@@ -2,6 +2,8 @@
 
 NHSABot is a Python bot that tweets when [North Hudson Sewerage Authority](http://www.nhudsonsa.com/) sewage is draining into the Hudson River, between New York and New Jersey. These events are referred to as [combined sewer overflows](https://en.wikipedia.org/wiki/Combined_sewer#Combined_sewer_overflows_\(CSOs\)) (CSOs).
 
+As of April 19, 2018, the bot also tweets [National Weather Service](https://www.weather.gov/) alerts for Hudson County which are categorized as moderate or severe.
+
 This project is primarily hosted on [SocialCoders](https://socialcoders.org/JacobHenner/NHSABot). 
 
 ## Getting Started
