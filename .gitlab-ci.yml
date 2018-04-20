@@ -11,7 +11,7 @@ test:
   stage: test
   script:
   - pip install pylint
-  - pylint -d C,R NHSABot/*.py
+  - pylint -d C,R NHSABot
 
 deploy:
   stage: deploy

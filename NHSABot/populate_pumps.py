@@ -13,12 +13,12 @@ def populate_pumps():
     session.get("https://www.123mc.com/123mc/map2009.4.asp?pbl=27731")
 
     for pump_id in PUMP_IDS:
-        if not Pump.select().where(Pump.id==pump_id).exists():
-            logging.info("Retrieving pump info from https://www.123mc.com/123mc/popalarms.asp?id=%s" % pump_id)
+        if not Pump.select().where(Pump.id == pump_id).exists():
+            logging.info("Retrieving pump info from https://www.123mc.com/123mc/popalarms.asp?id=%s", pump_id)
             content = session.get("https://www.123mc.com/123mc/popalarms.asp?id=%s" % pump_id).text
             parser = BeautifulSoup(content, 'html.parser')
             name = parser.td.font.next_element.next_element.next_element.next_element.text.split("DSN")[0].strip()
-            logging.info("Adding pump %s - %s to database" % (pump_id, name))
+            logging.info("Adding pump %s - %s to database", pump_id, name)
             pump = Pump(id=pump_id,name=name)
             #force_insert needed due to non-autoincrementing primary key
             pump.save(force_insert=True)

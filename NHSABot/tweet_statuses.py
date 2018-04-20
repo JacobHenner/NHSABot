@@ -3,7 +3,7 @@ import os
 import logging
 import tweepy
 import inflect
-from .models import Pump, Pump_status, NOAA_status
+from .models import Pump_status, NOAA_status
 
 # Set credentials from environment variables
 CONSUMER_SECRET = os.environ.get("CONSUMER_SECRET")
@@ -18,7 +18,7 @@ twitter_api = tweepy.API(auth)
 
 def tweet_pump_statuses():
     for status in Pump_status.select().where(Pump_status.processed == False):
-        logging.info("Evaluating: " + status.pump.name)
+        logging.info("Evaluating: %s", status.pump.name)
         if status.status == "No alarm":
             previous_status = Pump_status.select().where(Pump_status.pump == status.pump,
                                                          Pump_status.id != status.id).order_by(Pump_status.id.desc())
@@ -26,7 +26,7 @@ def tweet_pump_statuses():
                 # Status has been switched to no alarm after period of different status.
                 message = "The pump at %s is no longer reporting an alarm condition.\n\nIt had been reporting one since %s, which was %s ago." % (
                     status.pump.name, previous_status.get().timestamp.strftime("%H:%M:%S on %B %d, %Y"), _format_timedelta(status.timestamp - previous_status.get().timestamp))
-                logging.info("Tweeting: %s" % message)
+                logging.info("Tweeting: %s", message)
                 twitter_api.update_status(message)
             else:
                 # No alarm, but there are no records for comparsion. Do not tweet.
@@ -35,7 +35,7 @@ def tweet_pump_statuses():
             # There is an alarm status.
             message = "The pump at %s has started to report %s.\n\nThis status was first observed at %s." % (
                 status.pump.name, status.status, status.timestamp.strftime("%H:%M on %B %d, %Y"))
-            logging.info("Tweeting: %s" % message)
+            logging.info("Tweeting: %s", message)
             twitter_api.update_status(message)
 
         status.processed = True
@@ -46,10 +46,10 @@ def tweet_noaa_statuses():
     for status in NOAA_status.select().where(NOAA_status.processed == False):
         message = "%s.\n\n@NWS: \"%s\"" % (status.status, status.summary)
         if status.severity != "Minor" and status.severity != "Unknown":
-            logging.info("Tweeting: %s" % message)
+            logging.info("Tweeting: %s", message)
             twitter_api.update_status(message)
         else:
-            logging.info("Not tweeting due to insufficient severity: %s" % message)
+            logging.info("Not tweeting due to insufficient severity: %s", message)
         status.processed = True
         status.save()
 
@@ -67,7 +67,7 @@ def _format_timedelta(duration):
         "%d %s, " % (hours, p.plural("hour", hours)) if hours != 0 else ""
     string = string + \
         "%d %s" % (minutes, p.plural("minute", minutes)
-                   ) if minutes != 0 else ""
+                  ) if minutes != 0 else ""
     return string
 
 
