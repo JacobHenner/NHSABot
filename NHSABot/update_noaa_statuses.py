@@ -11,6 +11,7 @@ def update_noaa_statuses():
         for alert in hudson_county_alerts:
             if alert.category == "Met":
                 logging.info("Weather alert for %s: %s", alert.areadesc, alert.title)
+                # pylint: disable=assignment-from-no-return
                 existing_alert = NOAA_status.select().where(NOAA_status.url == alert.link)
                 if not existing_alert.exists():
                     NOAA_status(severity=alert.severity, summary=alert.summary, status=alert.title, urgency=alert.urgency, effective=alert.effective,
