@@ -24,8 +24,8 @@ def tweet_pump_statuses():
                                                          Pump_status.id != status.id).order_by(Pump_status.id.desc())
             if previous_status.exists():
                 # Status has been switched to no alarm after period of different status.
-                message = "The pump at %s is no longer reporting an alarm condition.\n\nIt had been reporting one since %s, which was %s ago." % (
-                    status.pump.name, previous_status.get().timestamp.strftime("%H:%M:%S on %B %d, %Y"), _format_timedelta(status.timestamp - previous_status.get().timestamp))
+                message = "The pump at %s is no longer reporting an alarm condition.\n\nIt had been reporting one since %s." % (
+                    status.pump.name, previous_status.get().timestamp.strftime("%H:%M:%S on %B %d, %Y"))
                 logging.info("Tweeting: %s", message)
                 twitter_api.update_status(message)
             else:
