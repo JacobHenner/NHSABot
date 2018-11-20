@@ -1,0 +1,35 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+alabaster = "*"
+appdirs = "*"
+"beautifulsoup4" = "*"
+docutils = "*"
+imagesize = "*"
+inflect = "*"
+oauthlib = "*"
+peewee = "*"
+pluggy = "*"
+py = "*"
+pyparsing = "*"
+pytz = "*"
+requests = "*"
+requests-oauthlib = "*"
+six = "*"
+snowballstemmer = "*"
+sphinxcontrib-httpdomain = "*"
+sphinxcontrib-websupport = "*"
+tox = "*"
+tweepy = "*"
+virtualenv = "*"
+Babel = "*"
+"Jinja2" = "*"
+MarkupSafe = "*"
+Pygments = "*"
+Sphinx = "*"
+WeatherAlerts = {editable = true, git = "https://github.com/JacobHenner/WeatherAlerts@feature/datetime"}
+
+[dev-packages]
