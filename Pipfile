@@ -30,6 +30,6 @@ Babel = "*"
 MarkupSafe = "*"
 Pygments = "*"
 Sphinx = "*"
-WeatherAlerts = {editable = true, git = "https://github.com/JacobHenner/WeatherAlerts@feature/datetime"}
+WeatherAlerts = {editable = true, git = "https://github.com/zebpalmer/WeatherAlerts"}
 
 [dev-packages]
